@@ -128,10 +128,12 @@ public class TopHologramManager {
                 for (Parkour parkour : main.getParkourHandler().getParkours().values()) {
 
                     if(parkour.getTopHologram() != null) {
-                        if (holoFooter.containsKey(parkour.getId())) {
-                            ((TextHologramLine) holoFooter.get(parkour.getId()).getLines().get(0))
-                                    .setText(main.getLanguageHandler().getMessage("Holograms.Top.Footer.Updating"));
-                        }
+                        Bukkit.getScheduler().runTask(main, () -> {
+                            if (holoFooter.containsKey(parkour.getId())) {
+                                ((TextHologramLine) holoFooter.get(parkour.getId()).getLines().get(0))
+                                        .setText(main.getLanguageHandler().getMessage("Holograms.Top.Footer.Updating"));
+                            }
+                        });
                     }
 
                     main.getDatabaseHandler().getParkourBestTimes(parkour.getId(), 10).thenAccept(leaderboard -> {
@@ -160,14 +162,18 @@ public class TopHologramManager {
 
                 restartTimeLeft();
             }
-            for (String parkour : main.getParkourHandler().getParkours().keySet()) {
-                if (holoFooter.containsKey(parkour)) {
-                    ((TextHologramLine) holoFooter.get(parkour).getLines().get(0))
-                            .setText(main.getLanguageHandler()
-                                    .getMessage("Holograms.Top.Footer.Line")
-                                    .replaceAll("%time%", main.getTimerManager().millisToString(main.getLanguageHandler().getMessage("Timer.Formats.HologramUpdate"), timeLeft * 1000)));
+
+            Bukkit.getScheduler().runTask(main, () -> {
+                for (String parkour : main.getParkourHandler().getParkours().keySet()) {
+                    if (holoFooter.containsKey(parkour)) {
+                        ((TextHologramLine) holoFooter.get(parkour).getLines().get(0))
+                                .setText(main.getLanguageHandler()
+                                        .getMessage("Holograms.Top.Footer.Line")
+                                        .replaceAll("%time%", main.getTimerManager().millisToString(main.getLanguageHandler().getMessage("Timer.Formats.HologramUpdate"), timeLeft * 1000)));
+                    }
                 }
-            }
+            });
+
             timeLeft--;
         }
     }
