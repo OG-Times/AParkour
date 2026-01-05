@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,7 +62,7 @@ public class MySQL implements Database {
             Main.log.sendMessage(ColorManager.translate("    &aMySQL has been enabled!"));
         } catch (HikariPool.PoolInitializationException e) {
             Main.log.sendMessage(ColorManager.translate("    &cMySQL has an error on the conection! Now trying with SQLite..."));
-            main.getDatabase().changeToSQLite();
+            main.getStorage().changeToSQLite();
         }
     }
 

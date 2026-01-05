@@ -41,10 +41,6 @@ public class Event_Click implements Listener {
                     if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                         e.setCancelled(true);
 
-                        if(!Bukkit.getVersion().contains("1.8")) {
-                            if(e.getHand() == EquipmentSlot.OFF_HAND) return;
-                        }
-
                         if(main.getSessionHandler().getSession(p) != null) {
                             ParkourSession session = main.getSessionHandler().getSession(p);
                             p.teleport(session.getParkour().getSpawn());
@@ -63,10 +59,6 @@ public class Event_Click implements Listener {
                 } else if (item.equals(main.getParkourItems().getCheckpointItem())) {
                     if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                         e.setCancelled(true);
-
-                        if(!Bukkit.getVersion().contains("1.8")) {
-                            if(e.getHand() == EquipmentSlot.OFF_HAND) return;
-                        }
 
                         if(main.getSessionHandler().getSession(p) != null) {
                             ParkourSession session = main.getSessionHandler().getSession(p);

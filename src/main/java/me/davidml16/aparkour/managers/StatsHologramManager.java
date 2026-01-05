@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.davidml16.aparkour.data.Parkour;
-import org.bukkit.Bukkit;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
+import me.filoghost.holographicdisplays.api.hologram.line.TextHologramLine;
 import org.bukkit.entity.Player;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import com.gmail.filoghost.holographicdisplays.api.VisibilityManager;
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
 
 import me.davidml16.aparkour.Main;
 
@@ -43,14 +42,14 @@ public class StatsHologramManager {
 							.replaceAll("%parkour%", parkour.getName()));
 				}
 
-				Hologram hologram = HologramsAPI.createHologram(main, parkour.getStatsHologram().clone().add(0.5D, 2.0D, 0.5D));
-				VisibilityManager visibilityManager = hologram.getVisibilityManager();
+				Hologram hologram = HolographicDisplaysAPI.get(main).createHologram(parkour.getStatsHologram().clone().add(0.5D, 2.0D, 0.5D));
+				VisibilitySettings visibilityManager = hologram.getVisibilitySettings();
 
-				visibilityManager.showTo(p);
-				visibilityManager.setVisibleByDefault(false);
+				visibilityManager.setIndividualVisibility(p, VisibilitySettings.Visibility.VISIBLE);
+				visibilityManager.setGlobalVisibility(VisibilitySettings.Visibility.HIDDEN);
 
-				hologram.insertTextLine(0, lines.get(0));
-				hologram.insertTextLine(1, lines.get(1));
+				hologram.getLines().insertText(0, lines.get(0));
+				hologram.getLines().insertText(1, lines.get(1));
 
 				main.getPlayerDataHandler().getData(p).getHolograms().put(parkour.getId(), hologram);
 			}
@@ -78,8 +77,8 @@ public class StatsHologramManager {
 
 				List<String> lines = getLines(parkour, p, bestTime);
 
-				((TextLine) hologram.getLine(0)).setText(lines.get(0));
-				((TextLine) hologram.getLine(1)).setText(lines.get(1));
+				((TextHologramLine) hologram.getLines().get(0)).setText(lines.get(0));
+				((TextHologramLine) hologram.getLines().get(1)).setText(lines.get(1));
 			}
 		}
 	}
@@ -95,7 +94,7 @@ public class StatsHologramManager {
 	}
 	
 	public List<String> getLines(Parkour parkour, Player p, long bestTime) {
-		List<String> lines = new ArrayList<String>();
+		List<String> lines = new ArrayList<>();
 		String NoBestTime = main.getLanguageHandler().getMessage("Times.NoBestTime");
 		lines.add(main.getLanguageHandler().getMessage("Holograms.Stats.Line1"));
 		lines.add(main.getLanguageHandler().getMessage("Holograms.Stats.Line2"));
@@ -139,7 +138,7 @@ public class StatsHologramManager {
 
 	public void reloadStatsHolograms() {
 		if (main.isHologramsEnabled()) {
-			for (Hologram hologram : HologramsAPI.getHolograms(main)) {
+			for (Hologram hologram : HolographicDisplaysAPI.get(main).getHolograms()) {
 				hologram.delete();
 			}
 		}

@@ -24,8 +24,6 @@ package me.davidml16.aparkour.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -91,8 +89,7 @@ public class ReflectionUtils {
      * @return the class.
      * @since 1.0.0
      */
-    @Nullable
-    public static Class<?> getNMSClass(@Nullable String name) {
+    public static Class<?> getNMSClass(String name) {
         try {
             return Class.forName(NMS + name);
         } catch (ClassNotFoundException ex) {
@@ -110,8 +107,7 @@ public class ReflectionUtils {
      * @return the async thread handling the packet.
      * @since 1.0.0
      */
-    @Nonnull
-    public static CompletableFuture<Void> sendPacket(@Nonnull Player player, @Nonnull Object packet) {
+    public static CompletableFuture<Void> sendPacket(Player player, Object packet) {
         return CompletableFuture.runAsync(() -> {
             try {
                 Object handle = GET_HANDLE.invoke(player);
@@ -132,8 +128,7 @@ public class ReflectionUtils {
      * @return a class.
      * @since 1.0.0
      */
-    @Nullable
-    public static Class<?> getCraftClass(@Nullable String name) {
+    public static Class<?> getCraftClass(String name) {
         try {
             return Class.forName(CRAFTBUKKIT + name);
         } catch (ClassNotFoundException ex) {

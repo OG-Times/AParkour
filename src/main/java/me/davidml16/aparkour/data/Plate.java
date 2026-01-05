@@ -1,6 +1,6 @@
 package me.davidml16.aparkour.data;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import org.bukkit.Location;
 
 public class Plate {

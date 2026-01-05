@@ -4,14 +4,13 @@ import com.google.common.base.Strings;
 import me.davidml16.aparkour.Main;
 import me.davidml16.aparkour.data.Parkour;
 import me.davidml16.aparkour.data.ParkourSession;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.bukkit.event.Listener;
+import org.github.paperspigot.Title;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -64,7 +63,7 @@ public class TitleUtil implements Listener {
      * Check if the server is runnong on 1.11 or higher.
      * Since in 1.11 you can change the timings.
      */
-    private static final boolean supported = Material.getMaterial("OBSERVER") != null;
+    private static final boolean supported = false;
     /**
      * EnumTitleAction
      * Used for the fade in, stay and fade out feature of titles.
@@ -92,37 +91,35 @@ public class TitleUtil implements Listener {
         Object subtitle = null;
         Object clear = null;
 
-        if (!supported) {
-            Class<?> chatComponentText = ReflectionUtils.getNMSClass("ChatComponentText");
-            Class<?> packet = ReflectionUtils.getNMSClass("PacketPlayOutTitle");
-            Class<?> titleTypes = packet.getDeclaredClasses()[0];
+        Class<?> chatComponentText = ReflectionUtils.getNMSClass("ChatComponentText");
+        Class<?> packet = ReflectionUtils.getNMSClass("PacketPlayOutTitle");
+        Class<?> titleTypes = packet.getDeclaredClasses()[0];
 
-            for (Object type : titleTypes.getEnumConstants()) {
-                switch (type.toString()) {
-                    case "TIMES":
-                        times = type;
-                        break;
-                    case "TITLE":
-                        title = type;
-                        break;
-                    case "SUBTITLE":
-                        subtitle = type;
-                        break;
-                    case "CLEAR":
-                        clear = type;
-                }
+        for (Object type : titleTypes.getEnumConstants()) {
+            switch (type.toString()) {
+                case "TIMES":
+                    times = type;
+                    break;
+                case "TITLE":
+                    title = type;
+                    break;
+                case "SUBTITLE":
+                    subtitle = type;
+                    break;
+                case "CLEAR":
+                    clear = type;
             }
+        }
 
-            MethodHandles.Lookup lookup = MethodHandles.lookup();
-            try {
-                chatComp = lookup.findConstructor(chatComponentText, MethodType.methodType(void.class, String.class));
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        try {
+            chatComp = lookup.findConstructor(chatComponentText, MethodType.methodType(void.class, String.class));
 
-                packetCtor = lookup.findConstructor(packet,
-                        MethodType.methodType(void.class, titleTypes,
-                                ReflectionUtils.getNMSClass("IChatBaseComponent"), int.class, int.class, int.class));
-            } catch (NoSuchMethodException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            packetCtor = lookup.findConstructor(packet,
+                    MethodType.methodType(void.class, titleTypes,
+                            ReflectionUtils.getNMSClass("IChatBaseComponent"), int.class, int.class, int.class));
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            e.printStackTrace();
         }
 
         TITLE = title;
@@ -146,15 +143,11 @@ public class TitleUtil implements Listener {
      * @see #clearTitle(Player)
      * @since 1.0.0
      */
-    public static void sendTitle(@Nonnull Player player,
+    public static void sendTitle(Player player,
                                  int fadeIn, int stay, int fadeOut,
-                                 @Nullable String title, @Nullable String subtitle) {
+                                 String title, String subtitle) {
         Objects.requireNonNull(player, "Cannot send title to null player");
         if (title == null && subtitle == null) return;
-        if (supported) {
-            player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
-            return;
-        }
 
         try {
             Object timesPacket = PACKET.invoke(TIMES, CHAT_COMPONENT_TEXT.invoke(title), fadeIn, stay, fadeOut);
@@ -183,7 +176,7 @@ public class TitleUtil implements Listener {
      * @see #sendTitle(Player, int, int, int, String, String)
      * @since 1.0.0
      */
-    public static void sendTitle(@Nonnull Player player, @Nonnull String title, @Nonnull String subtitle) {
+    public static void sendTitle(Player player, String title, String subtitle) {
         sendTitle(player, 10, 20, 10, title, subtitle);
     }
 
@@ -203,7 +196,7 @@ public class TitleUtil implements Listener {
      * @param config the configuration section to parse the title properties from.
      * @since 1.0.0
      */
-    public static void sendTitle(@Nonnull Player player, @Nonnull ConfigurationSection config) {
+    public static void sendTitle(Player player, ConfigurationSection config) {
         String title = config.getString("title");
         String subtitle = config.getString("subtitle");
 
@@ -224,7 +217,7 @@ public class TitleUtil implements Listener {
      * @param player the player to clear the title from.
      * @since 1.0.0
      */
-    public static void clearTitle(@Nonnull Player player) {
+    public static void clearTitle(Player player) {
         Objects.requireNonNull(player, "Cannot clear title from null player");
         if (supported) {
             player.resetTitle();

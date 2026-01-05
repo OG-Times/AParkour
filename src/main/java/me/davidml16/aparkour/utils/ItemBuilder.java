@@ -124,7 +124,7 @@ public class ItemBuilder {
     public ItemBuilder setSkullOwner(OfflinePlayer owner) {
         try {
             SkullMeta im = (SkullMeta) is.getItemMeta();
-            im.setOwningPlayer(owner);
+            im.setOwner(owner.getName());
             is.setItemMeta(im);
         } catch (ClassCastException expected) {
         }
