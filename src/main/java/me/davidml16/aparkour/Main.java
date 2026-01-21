@@ -98,8 +98,8 @@ public class Main extends JavaPlugin {
 
         hologramsEnabled = getConfig().getBoolean("Hologram.Enabled");
         if (isHologramsEnabled()) {
-            if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays") || !Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-                getLogger().severe("*** HolographicDisplays / ProtocolLib is not installed or not enabled. ***");
+            if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+                getLogger().severe("*** HolographicDisplays is not installed or not enabled. ***");
                 getLogger().severe("*** This plugin will be disabled. ***");
                 setEnabled(false);
                 return;
